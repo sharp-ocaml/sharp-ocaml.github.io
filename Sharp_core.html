@@ -1,0 +1,251 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Sharp.html">
+<link rel="next" href="Sharp_event.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Sharp" rel="Chapter" href="Sharp.html">
+<link title="Sharp_core" rel="Chapter" href="Sharp_core.html">
+<link title="Sharp_event" rel="Chapter" href="Sharp_event.html">
+<link title="Sharp_form" rel="Chapter" href="Sharp_form.html">
+<link title="Sharp_vdom" rel="Chapter" href="Sharp_vdom.html">
+<link title="Sharp_vdom_subnetwork" rel="Chapter" href="Sharp_vdom_subnetwork.html">
+<link title="Sharp_router" rel="Chapter" href="Sharp_router.html">
+<link title="Sharp_ticker" rel="Chapter" href="Sharp_ticker.html"><title>Sharp_core</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Sharp.html" title="Sharp">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Sharp_event.html" title="Sharp_event">Next</a>
+</div>
+<h1>Module <a href="type_Sharp_core.html">Sharp_core</a></h1>
+
+<pre><span class="keyword">module</span> Sharp_core: <code class="code">sig</code> <a href="Sharp_core.html">..</a> <code class="code">end</code></pre><div class="info module top">
+This the main module containing the code of the project. It defines how
+   signals operate and how they can be used. Simply put, signals are
+   time-varying value to which the code can react.
+<p>
+
+   More precisely, they are functions taking the time and returning a value of
+   the appropriate type and a new signal which can be used with future times.
+<p>
+
+   Signals are functors, applicative functors and monads. They can be combined
+   just like any other applicative functors or monads. For example,
+   <code class="code">map f s1</code> maps the function <code class="code">f</code> on the values taken by the signal <code class="code">s1</code>
+   returning a signal of the results. <code class="code">apply (map f s1) s2</code> or, more
+   idiomatically, <code class="code">f &lt;$&gt; s1 &lt;*&gt; s2</code> applies the function <code class="code">f</code> on the values taken
+   by the signals <code class="code">s1</code> and <code class="code">s2</code> and returns a signal of the results. Of course,
+   <code class="code">g &lt;$&gt; s1 &lt;*&gt; s2 &lt;*&gt; s3</code> will work with a function <code class="code">g</code> taking three arguments
+   (and so forth). Finally, you can bind two signals sequentially with the
+   monadic interface. Say you have a signal <code class="code">s1</code> returning the time and a
+   function <code class="code">f</code> taking the time as an argument and returning a signal of
+   integers, you can bind both with <code class="code">bind s1 f</code> or <code class="code">s1 &gt;&gt;= f</code> to yield a signal
+   of integers. The monadic bind on signals can be a bit tricky but <code class="code">map</code> and
+   <code class="code">apply</code> should be more than often in most cases.
+<p>
+
+   Signals are useless if they are not connected to the real world somehow.
+<p>
+
+   To input data into a network of signals, you will need the function <code class="code">event</code>.
+   It returns a optional signal (i.e. a signal of type <code class="code">'a option t</code>, that is, a
+   signal taking values of type <code class="code">'a option</code> together with a function to trigger
+   the event. Whenever this trigger is called with a value <code class="code">x</code>, the signal will
+   take the value <code class="code">Some x</code>, otherwise it will be <code class="code">None</code>.
+<p>
+
+   In order to react to events, there are a few functions which roughly work the
+   same way. The ones you will use the most are <code class="code">react_with</code> and <code class="code">react</code> which
+   is a specialised version of <code class="code">react_with</code>. <code class="code">react_with</code> reacts to a signal of
+   type <code class="code">'a option t</code> when it has a value and another "normal signal" and
+   executes a given function with the values taken by the signals. Here is a
+   simple example:
+<p>
+
+   <pre class="codepre"><code class="code">        let (int_signal, trigger_int) = event () in
+        react_with int_signal time (fun x t -&gt;
+            print_endline ("The time is " ^ string_of_float(t)
+                           ^ "and the event has been triggered with the value: "
+                           ^ string_of_int(x))
+          )
+   </code></pre>
+<p>
+
+   This module also includes a couple of functions transforming signals. Other
+   modules provide ways of binding signal networks to the external world, e.g.
+   reacting to the click of a button.<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEtime"><span class="keyword">type</span> <code class="type"></code>time</span> = <code class="type">float</code> </pre>
+
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type">'a</code> t</span> </pre>
+<div class="info ">
+Type of signals.<br>
+</div>
+
+
+<pre><span id="VALconst"><span class="keyword">val</span> const</span> : <code class="type">'a -> 'a <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+The simplest signal, always returning the same value. Note that, for
+    convenience and to reflect the intent of your code more accurately, you
+    can also use its aliases: return, pure and lift0.<br>
+</div>
+
+<pre><span id="VALtime"><span class="keyword">val</span> time</span> : <code class="type"><a href="Sharp_core.html#TYPEtime">time</a> <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Return the current time.<br>
+</div>
+
+<pre><span id="VALmap"><span class="keyword">val</span> map</span> : <code class="type">('a -> 'b) -> 'a <a href="Sharp_core.html#TYPEt">t</a> -> 'b <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Map a function onto a signal's (current and future) values.<br>
+</div>
+
+<pre><span id="VAL(<$>)"><span class="keyword">val</span> (&lt;$&gt;)</span> : <code class="type">('a -> 'b) -> 'a <a href="Sharp_core.html#TYPEt">t</a> -> 'b <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Alias for <code class="code">map</code>.<br>
+</div>
+
+<pre><span id="VALpure"><span class="keyword">val</span> pure</span> : <code class="type">'a -> 'a <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Alias for <code class="code">const</code>.<br>
+</div>
+
+<pre><span id="VALapply"><span class="keyword">val</span> apply</span> : <code class="type">('a -> 'b) <a href="Sharp_core.html#TYPEt">t</a> -> 'a <a href="Sharp_core.html#TYPEt">t</a> -> 'b <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Signals are applicative functors.<br>
+</div>
+
+<pre><span id="VAL(<*>)"><span class="keyword">val</span> (&lt;*&gt;)</span> : <code class="type">('a -> 'b) <a href="Sharp_core.html#TYPEt">t</a> -> 'a <a href="Sharp_core.html#TYPEt">t</a> -> 'b <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Alias for <code class="code">apply</code>.<br>
+</div>
+
+<pre><span id="VALlift0"><span class="keyword">val</span> lift0</span> : <code class="type">'a -> 'a <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+The following functions lift a function of values into a function of
+    signals.<br>
+</div>
+
+<pre><span id="VALlift"><span class="keyword">val</span> lift</span> : <code class="type">('a -> 'b) -> 'a <a href="Sharp_core.html#TYPEt">t</a> -> 'b <a href="Sharp_core.html#TYPEt">t</a></code></pre>
+<pre><span id="VALlift2"><span class="keyword">val</span> lift2</span> : <code class="type">('a -> 'b -> 'c) -> 'a <a href="Sharp_core.html#TYPEt">t</a> -> 'b <a href="Sharp_core.html#TYPEt">t</a> -> 'c <a href="Sharp_core.html#TYPEt">t</a></code></pre>
+<pre><span id="VALlift3"><span class="keyword">val</span> lift3</span> : <code class="type">('a -> 'b -> 'c -> 'd) -><br>       'a <a href="Sharp_core.html#TYPEt">t</a> -> 'b <a href="Sharp_core.html#TYPEt">t</a> -> 'c <a href="Sharp_core.html#TYPEt">t</a> -> 'd <a href="Sharp_core.html#TYPEt">t</a></code></pre>
+<pre><span id="VALlift4"><span class="keyword">val</span> lift4</span> : <code class="type">('a -> 'b -> 'c -> 'd -> 'e) -><br>       'a <a href="Sharp_core.html#TYPEt">t</a> -><br>       'b <a href="Sharp_core.html#TYPEt">t</a> -> 'c <a href="Sharp_core.html#TYPEt">t</a> -> 'd <a href="Sharp_core.html#TYPEt">t</a> -> 'e <a href="Sharp_core.html#TYPEt">t</a></code></pre>
+<pre><span id="VALlift5"><span class="keyword">val</span> lift5</span> : <code class="type">('a -> 'b -> 'c -> 'd -> 'e -> 'f) -><br>       'a <a href="Sharp_core.html#TYPEt">t</a> -><br>       'b <a href="Sharp_core.html#TYPEt">t</a> -><br>       'c <a href="Sharp_core.html#TYPEt">t</a> -> 'd <a href="Sharp_core.html#TYPEt">t</a> -> 'e <a href="Sharp_core.html#TYPEt">t</a> -> 'f <a href="Sharp_core.html#TYPEt">t</a></code></pre>
+<pre><span id="VALmap_opt"><span class="keyword">val</span> map_opt</span> : <code class="type">('a -> 'b) -> 'a option <a href="Sharp_core.html#TYPEt">t</a> -> 'b option <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+A kind of <code class="code">map</code> on optional signals.<br>
+</div>
+
+<pre><span id="VAL(<$?>)"><span class="keyword">val</span> (&lt;$?&gt;)</span> : <code class="type">('a -> 'b) -> 'a option <a href="Sharp_core.html#TYPEt">t</a> -> 'b option <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Alias for <code class="code">map_opt</code>.<br>
+</div>
+
+<pre><span id="VALapply_opt"><span class="keyword">val</span> apply_opt</span> : <code class="type">('a -> 'b) option <a href="Sharp_core.html#TYPEt">t</a> -><br>       'a option <a href="Sharp_core.html#TYPEt">t</a> -> 'b option <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+A kind <code class="code">apply</code> on optional signals.<br>
+</div>
+
+<pre><span id="VAL(<*?>)"><span class="keyword">val</span> (&lt;*?&gt;)</span> : <code class="type">('a -> 'b) option <a href="Sharp_core.html#TYPEt">t</a> -><br>       'a option <a href="Sharp_core.html#TYPEt">t</a> -> 'b option <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Alias for <code class="code">apply_opt</code>.<br>
+</div>
+
+<pre><span id="VALsequence"><span class="keyword">val</span> sequence</span> : <code class="type">'a <a href="Sharp_core.html#TYPEt">t</a> list -> 'a list <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Combine a list of signals into a signal of list.<br>
+</div>
+
+<pre><span id="VALreturn"><span class="keyword">val</span> return</span> : <code class="type">'a -> 'a <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Alias for <code class="code">const</code>.<br>
+</div>
+
+<pre><span id="VALjoin"><span class="keyword">val</span> join</span> : <code class="type">'a <a href="Sharp_core.html#TYPEt">t</a> <a href="Sharp_core.html#TYPEt">t</a> -> 'a <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Flatten a nested signal. When called, the next signal will be determined by
+    the outer signal and the new one determined by the inner one will be
+    discarded.<br>
+</div>
+
+<pre><span id="VALbind"><span class="keyword">val</span> bind</span> : <code class="type">'a <a href="Sharp_core.html#TYPEt">t</a> -> ('a -> 'b <a href="Sharp_core.html#TYPEt">t</a>) -> 'b <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Monadic bind. It allows to sequentially compose signals together.<br>
+</div>
+
+<pre><span id="VAL(>>=)"><span class="keyword">val</span> (&gt;&gt;=)</span> : <code class="type">'a <a href="Sharp_core.html#TYPEt">t</a> -> ('a -> 'b <a href="Sharp_core.html#TYPEt">t</a>) -> 'b <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Alias for <code class="code">bind</code>.<br>
+</div>
+
+<pre><span id="VAL(>>)"><span class="keyword">val</span> (&gt;&gt;)</span> : <code class="type">'a <a href="Sharp_core.html#TYPEt">t</a> -> 'b <a href="Sharp_core.html#TYPEt">t</a> -> 'b <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Like <code class="code">&gt;&gt;=</code> but it discards the value of the first signal.<br>
+</div>
+
+<pre><span id="VALperform"><span class="keyword">val</span> perform</span> : <code class="type">?force:bool -> 'a <a href="Sharp_core.html#TYPEt">t</a> -> ('a -> unit) -> unit</code></pre><div class="info ">
+Perform an action every time the signal changes value.
+<p>
+To be precise, the signal could have the same value as before but something
+   happened upstream. If some signals have been triggered and the signal passed
+   to <code class="code">perform</code> somehow depends on it, through calls to <code class="code">map</code> or <code class="code">apply</code> for
+   instance, the function given to <code class="code">perform</code> will be called.<br>
+</div>
+
+<pre><span id="VALperform_state"><span class="keyword">val</span> perform_state</span> : <code class="type">?force:bool -> 'a <a href="Sharp_core.html#TYPEt">t</a> -> init:'b -> f:('b -> 'a -> 'b) -> unit</code></pre><div class="info ">
+Like perform but maintain a state between calls.<br>
+</div>
+
+<pre><span id="VALreact"><span class="keyword">val</span> react</span> : <code class="type">'a option <a href="Sharp_core.html#TYPEt">t</a> -> ('a -> unit) -> unit</code></pre><div class="info ">
+Run the function when the optional signal takes a value.<br>
+</div>
+
+<pre><span id="VALreact_with"><span class="keyword">val</span> react_with</span> : <code class="type">'a option <a href="Sharp_core.html#TYPEt">t</a> -> 'b <a href="Sharp_core.html#TYPEt">t</a> -> ('a -> 'b -> unit) -> unit</code></pre><div class="info ">
+Same as <code class="code">react</code> with an additional signal.
+<p>
+This is useful for things like
+    <code class="code">react_with button_cliked data_signal (fun () data -&gt; (* do something *))</code>.<br>
+</div>
+
+<pre><span id="VALevent"><span class="keyword">val</span> event</span> : <code class="type">unit -> 'a option <a href="Sharp_core.html#TYPEt">t</a> * ('a -> unit)</code></pre><div class="info ">
+Create a optional signal with the function to give the signal the given
+    value at the current time.<br>
+</div>
+
+<pre><span id="VALconnected_event"><span class="keyword">val</span> connected_event</span> : <code class="type">(('a -> unit) -> unit -> unit) -><br>       'a option <a href="Sharp_core.html#TYPEt">t</a> * ('a -> unit) * (unit -> unit)</code></pre><div class="info ">
+Create a signal from a callback and returns the signal, the trigger function
+    and another callback to disconnect the event.
+<p>
+The first callback takes the trigger function and should return the second
+    callback to disconnect the event. To make its use clearer, imagine you want
+    to create a signal which should be triggered automatically when some JS
+    event occurs. The first callback would be a function starting to listen to
+    a JS event, calling the trigger function when the event occurs and returning
+    a callback to destroy the listener when it's called.<br>
+</div>
+
+<pre><span id="VALon"><span class="keyword">val</span> on</span> : <code class="type">'a option <a href="Sharp_core.html#TYPEt">t</a> -> init:'b -> f:('b -> 'a -> 'b) -> 'b <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Return a signal starting with the value <code class="code">init</code> and changing this value based
+    on the previous one and a value of an optional signal when it takes one.<br>
+</div>
+
+<pre><span id="VALlast"><span class="keyword">val</span> last</span> : <code class="type">'a option <a href="Sharp_core.html#TYPEt">t</a> -> init:'a -> 'a <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Return the last value taken by an optional signal, <code class="code">init</code> if none.<br>
+</div>
+
+<pre><span id="VALtoggle"><span class="keyword">val</span> toggle</span> : <code class="type">'b option <a href="Sharp_core.html#TYPEt">t</a> -> init:bool -> bool <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Toggle between <code class="code">true</code> and <code class="code">false</code> each time the given optional signal takes
+    a value.<br>
+</div>
+
+<pre><span id="VALcount"><span class="keyword">val</span> count</span> : <code class="type">?init:int -> 'b option <a href="Sharp_core.html#TYPEt">t</a> -> int <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Count the number of times the optional signal has had a value.<br>
+</div>
+
+<pre><span id="VALupon"><span class="keyword">val</span> upon</span> : <code class="type">?init:'a -> 'c option <a href="Sharp_core.html#TYPEt">t</a> -> 'a <a href="Sharp_core.html#TYPEt">t</a> -> 'a <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+The new signal will keep the same value until the optional value takes a
+    value.<br>
+</div>
+
+<pre><span id="VALfold"><span class="keyword">val</span> fold</span> : <code class="type">'a <a href="Sharp_core.html#TYPEt">t</a> -> init:'b -> f:('b -> 'a -> 'b) -> 'b <a href="Sharp_core.html#TYPEt">t</a></code></pre><div class="info ">
+Fold the values taken by a signal.
+<p>
+It is important to understand that signals are only called when something
+    happened. It is therefore not continuous.<br>
+</div>
+</body></html>

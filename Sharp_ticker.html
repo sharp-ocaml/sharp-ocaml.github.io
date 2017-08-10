@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Sharp_router.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Sharp" rel="Chapter" href="Sharp.html">
+<link title="Sharp_core" rel="Chapter" href="Sharp_core.html">
+<link title="Sharp_event" rel="Chapter" href="Sharp_event.html">
+<link title="Sharp_form" rel="Chapter" href="Sharp_form.html">
+<link title="Sharp_vdom" rel="Chapter" href="Sharp_vdom.html">
+<link title="Sharp_vdom_subnetwork" rel="Chapter" href="Sharp_vdom_subnetwork.html">
+<link title="Sharp_router" rel="Chapter" href="Sharp_router.html">
+<link title="Sharp_ticker" rel="Chapter" href="Sharp_ticker.html"><title>Sharp_ticker</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Sharp_router.html" title="Sharp_router">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Module <a href="type_Sharp_ticker.html">Sharp_ticker</a></h1>
+
+<pre><span class="keyword">module</span> Sharp_ticker: <code class="code">sig</code> <a href="Sharp_ticker.html">..</a> <code class="code">end</code></pre><div class="info module top">
+Signals that takes value at certain times (such as every 5 minutes.)<br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEtime_diff"><span class="keyword">type</span> <code class="type"></code>time_diff</span> = <code class="type"><a href="Sharp_core.html#TYPEtime">Sharp_core.time</a></code> </pre>
+
+
+<pre><code><span id="TYPEcommand"><span class="keyword">type</span> <code class="type">'a</code> command</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcommand.Once"><span class="constructor">Once</span></span> <span class="keyword">of</span> <code class="type">'a * <a href="Sharp_ticker.html#TYPEtime_diff">time_diff</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Take the value after x seconds.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcommand.Every"><span class="constructor">Every</span></span> <span class="keyword">of</span> <code class="type">'a * <a href="Sharp_ticker.html#TYPEtime_diff">time_diff</a></code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Take the value every x seconds.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTcommand.NTimes"><span class="constructor">NTimes</span></span> <span class="keyword">of</span> <code class="type">'a * <a href="Sharp_ticker.html#TYPEtime_diff">time_diff</a> * int</code></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" ><div class="info ">
+Take the value every x seconds n times
+                                       then stops.<br>
+</div>
+</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+<div class="info ">
+A command that can be given to a tick manager.<br>
+</div>
+
+
+<pre><span id="VALtick_manager"><span class="keyword">val</span> tick_manager</span> : <code class="type">'a <a href="Sharp_ticker.html#TYPEcommand">command</a> list -><br>       'a option <a href="Sharp_core.html#TYPEt">Sharp_core.t</a> * ('a <a href="Sharp_ticker.html#TYPEcommand">command</a> -> unit) * (unit -> unit)</code></pre><div class="info ">
+Take a list of initial commands and return the signal, a trigger function to
+    send new commands and a callback to stop the tick manager.<br>
+</div>
+
+<pre><span id="VALevery"><span class="keyword">val</span> every</span> : <code class="type"><a href="Sharp_ticker.html#TYPEtime_diff">time_diff</a> -> 'a -> 'a option <a href="Sharp_core.html#TYPEt">Sharp_core.t</a> * (unit -> unit)</code></pre><div class="info ">
+Create a signal which takes the given value every x seconds.<br>
+</div>
+
+<pre><span id="VALlast_for"><span class="keyword">val</span> last_for</span> : <code class="type"><a href="Sharp_ticker.html#TYPEtime_diff">time_diff</a> -> 'a option <a href="Sharp_core.html#TYPEt">Sharp_core.t</a> -> 'a option <a href="Sharp_core.html#TYPEt">Sharp_core.t</a></code></pre><div class="info ">
+Transform a signal so that it keeps the last value for x seconds even though
+    the underlying signal does not have a value anynore.
+<p>
+Note that this does not bind any events. Hence, nothing is triggered
+    automatically after these x seconds. This signal should therefore be bound
+    to a ticker somehow before it is connected to a function like <code class="code">vdom</code>.<br>
+</div>
+</body></html>

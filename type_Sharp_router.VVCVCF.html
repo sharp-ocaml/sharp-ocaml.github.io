@@ -1,0 +1,33 @@
+<html><head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Sharp" rel="Chapter" href="Sharp.html">
+<link title="Sharp_core" rel="Chapter" href="Sharp_core.html">
+<link title="Sharp_event" rel="Chapter" href="Sharp_event.html">
+<link title="Sharp_form" rel="Chapter" href="Sharp_form.html">
+<link title="Sharp_vdom" rel="Chapter" href="Sharp_vdom.html">
+<link title="Sharp_vdom_subnetwork" rel="Chapter" href="Sharp_vdom_subnetwork.html">
+<link title="Sharp_router" rel="Chapter" href="Sharp_router.html">
+<link title="Sharp_ticker" rel="Chapter" href="Sharp_ticker.html"><title>Sharp_router.VVCVCF</title>
+</head>
+<body>
+<code class="code"><span class="keyword">sig</span>
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;t&nbsp;=&nbsp;<span class="constructor">Var</span>(<span class="constructor">VCVCF</span>).t&nbsp;=&nbsp;<span class="constructor">Var</span>&nbsp;<span class="keyword">of</span>&nbsp;<span class="constructor">VCVCF</span>.t
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;parse_func&nbsp;=&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">VCVCF</span>.parse_func
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;parse_opt_func&nbsp;=&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">VCVCF</span>.parse_opt_func
+&nbsp;&nbsp;<span class="keyword">type</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;generate_func&nbsp;=&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;<span class="constructor">VCVCF</span>.generate_func
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;parse&nbsp;:&nbsp;t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;parse_func&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;route
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;parse_opt&nbsp;:&nbsp;t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;parse_opt_func&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="keywordsign">'</span>a&nbsp;route
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;generate&nbsp;:&nbsp;t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;list&nbsp;generate_func
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;generate_&nbsp;:&nbsp;string&nbsp;list&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;list&nbsp;generate_func
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;to_fragment&nbsp;:&nbsp;t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;generate_func
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;to_fragment_&nbsp;:&nbsp;string&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;string&nbsp;generate_func
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;var&nbsp;:&nbsp;<span class="constructor">VCVCF</span>.t&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;t
+<span class="keyword">end</span></code></body></html>

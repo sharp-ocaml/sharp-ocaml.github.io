@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Sharp_form.html">
+<link rel="next" href="Sharp_vdom_subnetwork.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of class methods" rel=Appendix href="index_methods.html">
+<link title="Index of class types" rel=Appendix href="index_class_types.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Index of module types" rel=Appendix href="index_module_types.html">
+<link title="Sharp" rel="Chapter" href="Sharp.html">
+<link title="Sharp_core" rel="Chapter" href="Sharp_core.html">
+<link title="Sharp_event" rel="Chapter" href="Sharp_event.html">
+<link title="Sharp_form" rel="Chapter" href="Sharp_form.html">
+<link title="Sharp_vdom" rel="Chapter" href="Sharp_vdom.html">
+<link title="Sharp_vdom_subnetwork" rel="Chapter" href="Sharp_vdom_subnetwork.html">
+<link title="Sharp_router" rel="Chapter" href="Sharp_router.html">
+<link title="Sharp_ticker" rel="Chapter" href="Sharp_ticker.html"><title>Sharp_vdom</title>
+</head>
+<body>
+<div class="navbar"><a class="pre" href="Sharp_form.html" title="Sharp_form">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Sharp_vdom_subnetwork.html" title="Sharp_vdom_subnetwork">Next</a>
+</div>
+<h1>Module <a href="type_Sharp_vdom.html">Sharp_vdom</a></h1>
+
+<pre><span class="keyword">module</span> Sharp_vdom: <code class="code">sig</code> <a href="Sharp_vdom.html">..</a> <code class="code">end</code></pre><div class="info module top">
+An experimental implementation of a VDOM with helpers to link it to
+    signals.
+<p>
+
+    Say <code class="code">s1</code> is a signal of first name and last name, so its type is
+    <code class="code">(string * string) t</code>, and <code class="code">container</code> is a HTML element of type
+    <code class="code">Dom_html.element Js.t</code>. You can display a message in this element like
+    this:
+<p>
+
+    <pre class="codepre"><code class="code">      let unlink =
+        vdom container s1 (fun (first_name, last_name) -&gt;
+          tag "div" |* ("class", "message")
+          |- text "Hello! You are "
+          |- (tag "em" |- text (first_name ^ " " ^ last_name))
+        )
+      in
+      (* Rest of your program. *)
+      (* Calling unlink causes the VDOM to be destroyed. *)
+    </code></pre><br>
+</div>
+<hr width="100%">
+
+<pre><span id="TYPEt"><span class="keyword">type</span> <code class="type"></code>t</span> </pre>
+<div class="info ">
+VDOM type.<br>
+</div>
+
+
+<pre><span id="VALvdom"><span class="keyword">val</span> vdom</span> : <code class="type">Dom_html.element Js.t -><br>       'a <a href="Sharp_core.html#TYPEt">Sharp_core.t</a> -> ('a -> <a href="Sharp_vdom.html#TYPEt">t</a>) -> unit -> unit</code></pre><div class="info ">
+Run the function with the signal's value every time it "changes" value (see
+    document of <code class="code">Sharp.Core</code> for more details on that) and binds the returned
+    VDOM to the given real DOM element. The returned callback can be called to
+    stop reacting to this signal.<br>
+</div>
+
+<pre><code><span id="TYPErestart_strategy"><span class="keyword">type</span> <code class="type"></code>restart_strategy</span> = </code></pre><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTrestart_strategy.Never"><span class="constructor">Never</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTrestart_strategy.Always"><span class="constructor">Always</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTrestart_strategy.OnChange"><span class="constructor">OnChange</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTrestart_strategy.OnDeepChange"><span class="constructor">OnDeepChange</span></span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span id="TYPEELTrestart_strategy.OnIdentifierChange"><span class="constructor">OnIdentifierChange</span></span> <span class="keyword">of</span> <code class="type">string</code></code></td>
+
+</tr></table>
+
+<div class="info ">
+When creating a node, a network can be given, the restart strategy
+    determines when this network should be stopped and called again.<br>
+</div>
+
+
+<pre><span id="VALnode"><span class="keyword">val</span> node</span> : <code class="type">?network:(Dom_html.element Js.t -> unit -> unit) -><br>       ?strategy:<a href="Sharp_vdom.html#TYPErestart_strategy">restart_strategy</a> -><br>       ?id:string -> string -> <a href="Sharp_vdom.html#TYPEt">t</a> list -> <a href="Sharp_vdom.html#TYPEt">t</a></code></pre><div class="info ">
+Create a VDOM node of the given HTML tag with the given list of children.
+<p>
+<code class="code">network</code> is a function called when the actual node is created and whose
+    returned function is called when the node is destroyed.
+    <code class="code">strategy</code> is the restart strategy for this node. See <code class="code">restart_strategy</code>.
+    <code class="code">id</code> allows you to identify a node in order to help the VDOM engine to
+    distinguish between nodes.<br>
+</div>
+
+<pre><span id="VALelement"><span class="keyword">val</span> element</span> : <code class="type">?network:(Dom_html.element Js.t -> unit -> unit) -><br>       ?strategy:<a href="Sharp_vdom.html#TYPErestart_strategy">restart_strategy</a> -> ?id:string -> string -> <a href="Sharp_vdom.html#TYPEt">t</a></code></pre><div class="info ">
+Same as <code class="code">node</code> but without children.<br>
+</div>
+
+<pre><span id="VALtag"><span class="keyword">val</span> tag</span> : <code class="type">?network:(Dom_html.element Js.t -> unit -> unit) -><br>       ?strategy:<a href="Sharp_vdom.html#TYPErestart_strategy">restart_strategy</a> -> ?id:string -> string -> <a href="Sharp_vdom.html#TYPEt">t</a></code></pre><div class="info ">
+Alias for <code class="code">element</code>.<br>
+</div>
+
+<pre><span id="VALtext"><span class="keyword">val</span> text</span> : <code class="type">?network:(Dom.text Js.t -> unit -> unit) -><br>       ?strategy:<a href="Sharp_vdom.html#TYPErestart_strategy">restart_strategy</a> -> string -> <a href="Sharp_vdom.html#TYPEt">t</a></code></pre><div class="info ">
+A text node.<br>
+</div>
+
+<pre><span id="VALappend_child"><span class="keyword">val</span> append_child</span> : <code class="type"><a href="Sharp_vdom.html#TYPEt">t</a> -> <a href="Sharp_vdom.html#TYPEt">t</a> -> <a href="Sharp_vdom.html#TYPEt">t</a></code></pre><div class="info ">
+Append a child to a node. The first parameter is the parent.<br>
+</div>
+
+<pre><span id="VALprepend_child"><span class="keyword">val</span> prepend_child</span> : <code class="type"><a href="Sharp_vdom.html#TYPEt">t</a> -> <a href="Sharp_vdom.html#TYPEt">t</a> -> <a href="Sharp_vdom.html#TYPEt">t</a></code></pre><div class="info ">
+Prepend a child to a node. The first parameter is the parent.<br>
+</div>
+
+<pre><span id="VALset_attribute"><span class="keyword">val</span> set_attribute</span> : <code class="type">string -> string -> <a href="Sharp_vdom.html#TYPEt">t</a> -> <a href="Sharp_vdom.html#TYPEt">t</a></code></pre><div class="info ">
+Set an attribute to a node. The first string is the attribute name and the
+    second its value.<br>
+</div>
+
+<pre><span id="VALclear_attribute"><span class="keyword">val</span> clear_attribute</span> : <code class="type">string -> <a href="Sharp_vdom.html#TYPEt">t</a> -> <a href="Sharp_vdom.html#TYPEt">t</a></code></pre><div class="info ">
+Remove an attribute from a node.<br>
+</div>
+
+<pre><span id="VAL(|-)"><span class="keyword">val</span> (|-)</span> : <code class="type"><a href="Sharp_vdom.html#TYPEt">t</a> -> <a href="Sharp_vdom.html#TYPEt">t</a> -> <a href="Sharp_vdom.html#TYPEt">t</a></code></pre><div class="info ">
+Alias for <code class="code">append_child</code>.<br>
+</div>
+
+<pre><span id="VAL(|+)"><span class="keyword">val</span> (|+)</span> : <code class="type"><a href="Sharp_vdom.html#TYPEt">t</a> -> <a href="Sharp_vdom.html#TYPEt">t</a> list -> <a href="Sharp_vdom.html#TYPEt">t</a></code></pre><div class="info ">
+Append several children at once.<br>
+</div>
+
+<pre><span id="VAL( |* )"><span class="keyword">val</span> ( |* )</span> : <code class="type"><a href="Sharp_vdom.html#TYPEt">t</a> -> string * string -> <a href="Sharp_vdom.html#TYPEt">t</a></code></pre><div class="info ">
+Alias for <code class="code">set_attribute</code> (sort of.)<br>
+</div>
+
+<pre><span class="keyword">module</span> <a href="Sharp_vdom.Linked.html">Linked</a>: <code class="code">sig</code> <a href="Sharp_vdom.Linked.html">..</a> <code class="code">end</code></pre>
+<pre><span id="VALlink"><span class="keyword">val</span> link</span> : <code class="type">?current:Dom.node Js.t -><br>       Dom_html.element Js.t -> <a href="Sharp_vdom.html#TYPEt">t</a> -> <a href="Sharp_vdom.Linked.html#TYPEt">Linked.t</a> * (unit -> unit)</code></pre><div class="info ">
+Link a VDOM to a node and return a pair with a linked VDOM and a callback to
+    start the subnetworks.
+    This is so that we can use perform_state_post to start the subnetworks after
+    the new state has been recorded.<br>
+</div>
+
+<pre><span id="VALunlink"><span class="keyword">val</span> unlink</span> : <code class="type">?remove:bool -> <a href="Sharp_vdom.Linked.html#TYPEt">Linked.t</a> -> unit -> unit</code></pre>
+<pre><span id="VALdiff_and_patch"><span class="keyword">val</span> diff_and_patch</span> : <code class="type">Dom_html.element Js.t -><br>       <a href="Sharp_vdom.Linked.html#TYPEt">Linked.t</a> -> <a href="Sharp_vdom.html#TYPEt">t</a> -> <a href="Sharp_vdom.Linked.html#TYPEt">Linked.t</a> * (unit -> unit)</code></pre>
+<pre><span class="keyword">module</span> <a href="Sharp_vdom.Element.html">Element</a>: <code class="code">sig</code> <a href="Sharp_vdom.Element.html">..</a> <code class="code">end</code></pre><div class="info">
+Helpers for specific elements
+</div>
+
+<pre><span class="keyword">module</span> <a href="Sharp_vdom.E.html">E</a>: <code class="type"><a href="Sharp_vdom.Element.html">Element</a></code></pre></body></html>
